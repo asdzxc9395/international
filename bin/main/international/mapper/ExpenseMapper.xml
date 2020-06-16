@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="international.dao.ExpenseDao">
+	<resultMap type="Expense" id="ExpenseMap">
+		<id column="expense_no" property="expenseNo" />
+		<result column="name" property="name" />
+		<result column="use_date" property="useDate" />
+		<result column="use_price" property="usePrice" />
+		<result column="approve_price" property="approvePrice" />
+		<result column="process_status" property="processStatus" />
+		<result column="registration_date" property="registrationDate" />
+		<result column="receipt" property="receipt" />
+		<result column="process_date" property="processDate" />
+		<result column="remark" property="remark" />
+	</resultMap>
+
+	<select id="findAll" resultMap="ExpenseMap">
+select * from expense;
+	</select>
+
+	<select id="findByNo" resultMap="ExpenseMap"
+		parameterType="int">
+	select 
+		* 
+		from 
+		expense
+		where
+		expense_no = #{expenseNo}	
+	</select>
+
+	<insert id="insert" parameterType="Expense">
+		insert into expense
+		(
+		name, use_date, use_price, approve_price,
+		 process_status, registration_date, receipt, 
+		 process_date, remark)
+		values(
+		#{name}, #{useDate}, #{usePrice}, #{approvePrice}, #{processStatus}, 
+		#{registrationDate}, #{receipt}, #{processDate}, #{remark})
+		    <selectKey keyProperty="expenseNo" resultType="int">
+        SELECT LAST_INSERT_ID()
+    </selectKey>
+	</insert>
+
+	<delete id="delete" parameterType="int">
+		delete from
+		expense
+		where
+		expense_no=#{expenseNo}
+	</delete>
+
+	<update id="update" parameterType="Expense">
+		update expense
+		<set>
+			<if test="name != null and name != ''">name=#{name},</if>
+			<if test="useDate != null">use_date=#{useDate},</if>
+			<if test="usePrice != null and usePrice != ''">use_price=#{usePrice},</if>
+			<if test="approvePrice != null and approvePrice != ''">approve_price=#{approvePrice},</if>
+			<if test="processStatus != null and processStatus != ''">process_status=#{processStatus},</if>
+			<if test="registrationDate != null">registration_date=#{registrationDate},</if>
+			<if test="receipt != null and receipt != ''">receipt=#{receipt},</if>
+			<if test="processDate != null">process_date=#{processDate},</if>
+			<if test="remark != null and remark != ''">remark=#{remark}</if>
+		</set>
+		where
+		expense_no = #{expenseNo}
+	</update>
+</mapper>
