@@ -38,6 +38,8 @@ function doubleSubmitCheck(){
     }
 }
 
+
+
 window.onload = function() {
 var addMultiple = document.getElementById("detailForm");
 addMultiple.onclick = function() {
