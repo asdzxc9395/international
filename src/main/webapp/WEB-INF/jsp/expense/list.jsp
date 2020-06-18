@@ -6,11 +6,39 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>프리렌서 조회</title> 
+<link rel="stylesheet" href='../../css/update.css' />
 </head>
 <body>
- <h2 class="bList_title"> 총00건</h2>
- <a href="form">등록</a>
- <button id="aaa">연습</button>
+
+			<form action='search' method='get'>
+			<a>등록년월:</a>
+			<input name='registrationDate' type='date' id="registrationDate">
+			<a>사용내역:</a>
+			<select id="name" name="name">
+		  		<option value="" selected> 선택</option>
+    			<option value="식대(야근)">식대(야근)</option>
+			    <option value="택시비(야근)">택시비(야근)</option>
+			    <option value="택시비(회식)">택시비(회식)</option>
+			    <option value="사무용품구매">사무용품구매</option>
+    			<option value="교육비">교육비</option>
+   			    <option value="접대비">접대비</option>
+			</select><br>
+			
+			<a>처리상태:</a>
+			<select id="processStatus" name="processStatus">
+		  		<option value="" selected> 선택</option>
+			    <option value="접수">접수</option>
+			    <option value="승인">승인</option>
+			    <option value="지급완료">지급완료</option>
+    			<option value="반려">반려</option>
+			</select>
+			<button>검색</button>
+			<a href="list">초기화</a>
+			</form>
+
+
+<div id="list">
+ <h2 class="bList_title">총${size}건</h2>
 <table border="8">
     <tr>
        <th width="5%" height="15%">순번</th>
@@ -25,65 +53,7 @@
   <tr>
     <td>${item.expenseNo}</td> 
     <td>${item.useDate}</td> 
-    <td><a id="detailForm" name="${item.expenseNo}">${item.name}</a>
-    
-    <script>
-var doubleSubmitFlag = false;
-function doubleSubmitCheck(){
-    if(doubleSubmitFlag){
-        return doubleSubmitFlag;
-    }else{
-        doubleSubmitFlag = true;
-        return false;
-    }
-}
-
-
-
-
-
-window.onload = function() {
-var addMultiple = document.getElementById("detailForm");
-addMultiple.onclick = function() {
-	if(doubleSubmitCheck()) return;
-
-	let rowDiv = document.createElement("div");
-	
-	let contents = '';
-
-	contents +='<h2>경비 등록/ 수정</h2>';
-	contents +='<table border="8">';
-	contents += ' <tr>';
-	contents +=  '     <td>사용내역</td>';
-	contents +=	 '      <td><select name="name">';
-	contents +=	 '   <option value="" selected> 선택</option>';
-	contents +=	 '   <option value="식대(야근)">식대(야근)</option>';
-	contents +=	 '   <option value="택시비(야근)">택시비(야근)</option>';
-	contents +=  '  <option value="택시비(회식)">택시비(회식)</option>';
-	contents +=  '  <option value="사무용품구매">사무용품구매</option>';
-	contents +=  '  <option value="교육비">교육비</option>';
-	contents +=	 '   <option value="접대비">접대비/option>';
-	contents +=	'   </select></td> ';
-	contents += '  </tr>';
-	contents += '   <tr>';
-	contents += '      <td>사용일</td>';
-	contents += '      <td><input name="useDate" type="date"></td>';
-	contents +=	'   </tr>';
-	contents +=	'    <tr>';
-	contents +=	'       <td>금액</td>';
-	contents +=	'       <td><input name="usePrice" type="text"></td>';
-	contents +=	'   </tr>';
-	contents +=	'    <tr>';
-	contents +=	'       	<td>영수증</td>';
-	contents +=	'    	<td><input name="imageFile" type="file"></td>';
-	contents +=	'  </tr>';
-	contents +=	'  </table>'; 
-	contents +=	'<a href="list">닫기</a>';
-		contents +=	'<button>저장</button>';
-	rowDiv.innerHTML = contents;	
-	addMultiple.parentNode.appendChild(rowDiv);
-}};
-</script>
+    <td><a href="detail?no=${item.expenseNo}">${item.name}</a>
     </td> 
     <td>${item.usePrice}</td> 
     <td>${item.approvePrice}</td>
@@ -91,10 +61,53 @@ addMultiple.onclick = function() {
     <td>${item.registrationDate}</td>
   </tr>
 </c:forEach>
+  <tr>
+  <th width="5%" height="15%">합계</th>
+       <th width="16%"></th>
+       <th width="20%"></th>
+       <td width="10%">${usePrice}</td>
+       <td width="10%">${approvePrice}</td>
+       <th width="20%"></th>
+       <th width="16%"></th>
+  </tr>
 </table>
+</div>
+<div id="add">
 <form action='add' method='post' enctype='multipart/form-data'>
-<a id="addForm">제이쿼리등록</a>
+<a id="addForm">등록</a>
+</form> 
+</div>
+
+<!-- 엑셀 다운로드 -->
+<script type="text/javascript">
+    function doExcelUploadProcess(){
+        var f = new FormData(document.getElementById('form1'));
+        $.ajax({
+            url: "uploadExcelFile",
+            data: f,
+            processData: false,
+            contentType: false,
+            type: "POST",
+            success: function(data){
+                console.log(data);
+                document.getElementById('result').innerHTML = JSON.stringify(data);
+            }
+        })
+    }
+    
+    function doExcelDownloadProcess(){
+        var f = document.form1;
+        f.action = "downloadExcelFile";
+        f.submit();
+    }
+</script>
+<form id="form1" name="form1" method="post" enctype="multipart/form-data">
+    <input type="file" id="fileInput" name="fileInput">
+    <button type="button" onclick="doExcelDownloadProcess()">엑셀다운로드</button>
+    <button type="button" onclick="doExcelUploadProcess()">등록</button>
 </form>
+
+
 <script src="../../script/addEvent.js"></script>
 </body>
 </html>

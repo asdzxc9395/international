@@ -10,35 +10,11 @@
 <link rel="stylesheet" href='../../css/update.css' />
 </head>
 <body>
-
-<form action='search' method='get'>
-			<a>등록년월:</a>
-			<input name='registrationDate' type='date' id="registrationDate">
-			<a>사용내역:</a>
-			<select id="name" name="name">
-		  		<option value="" selected> 선택</option>
-    			<option value="식대(야근)">식대(야근)</option>
-			    <option value="택시비(야근)">택시비(야근)</option>
-			    <option value="택시비(회식)">택시비(회식)</option>
-			    <option value="사무용품구매">사무용품구매</option>
-    			<option value="교육비">교육비</option>
-   			    <option value="접대비">접대비</option>
-			</select><br>
-			
-			<a>처리상태:</a>
-			<select id="processStatus" name="processStatus">
-		  		<option value="" selected> 선택</option>
-			    <option value="접수">접수</option>
-			    <option value="승인">승인</option>
-			    <option value="지급완료">지급완료</option>
-    			<option value="반려">반려</option>
-			</select>
-			<button>검색</button>
-			<a href="list">초기화</a>
-			</form>
-
+<body>
 <div id="list">
- <h2 class="bList_title"> 총${size}건</h2>
+ <h2 class="bList_title"> 총00건</h2>
+ <a href="form">등록</a>
+ <button id="aaa">연습</button>
 <table border="8">
     <tr>
        <th width="5%" height="15%">순번</th>
@@ -61,23 +37,11 @@
     <td>${item.registrationDate}</td>
   </tr>
 </c:forEach>
-  <tr>
-  <th width="5%" height="15%">합계</th>
-       <th width="16%"></th>
-       <th width="20%"></th>
-       <td width="10%">${usePrice}</td>
-       <td width="10%">${approvePrice}</td>
-       <th width="20%"></th>
-       <th width="16%"></th>
-  </tr>
 </table>
 </div>
 <div id="add">
-<form action='add' method='post' enctype='multipart/form-data'>
-<a id="addForm">등록</a>
-</form> 
+<input type="submit" value="등록" formaction="add" id="addForm" onclick="add();">
 </div>
-
 
 <!-- 업데이트 -->
 <div id='update'>
@@ -113,17 +77,11 @@
 <h2>청구내역</h2>
 <table border="8">
     <tr>
-       <td>처리상태</td>
-       <td><select name="processStatus">
-		  		<option value="" selected> 선택</option>
-			    <option value="접수">접수</option>
-			    <option value="승인">승인</option>
-			    <option value="지급완료">지급완료</option>
-    			<option value="반려">반려</option>
-			</select> </td> 
+       <td>사용내역</td>
+       <td><input name="processStatus" type="text" value="${expense.processStatus}"></td> 
    </tr>
     <tr>
-       <td>처리일시</td>
+       <td>사용일</td>
        <td><input name="processDate" type="date" value="${expense.processDate}" id="currentDate">
        <script>
     document.getElementById('currentDate').value = new Date().toISOString().substring(0, 10);
@@ -147,6 +105,5 @@
 <a href="list">닫기</a>
 </form>
 </div>
-<script src="../../script/addEvent.js"></script>
 </body>
 </html>

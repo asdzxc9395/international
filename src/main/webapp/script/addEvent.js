@@ -7,12 +7,13 @@
             return false;
         }
     }
-	
+/*    	function add() {
+    	var addMultiple = document.getElementById("addForm");
+    		if(doubleSubmitCheck()) return;*/
 	window.onload = function() {
-	var addMultiple = document.getElementById("addForm");
-	addMultiple.onclick = function() {
-		if(doubleSubmitCheck()) return;
-
+		var addMultiple = document.getElementById("addForm");
+		addMultiple.onclick = function() {
+			if(doubleSubmitCheck()) return;
 		let rowDiv = document.createElement("div");
 		
 		let contents = '';
@@ -28,7 +29,7 @@
 		contents +=  '  <option value="택시비(회식)">택시비(회식)</option>';
 		contents +=  '  <option value="사무용품구매">사무용품구매</option>';
 		contents +=  '  <option value="교육비">교육비</option>';
-		contents +=	 '   <option value="접대비">접대비/option>';
+		contents +=	 '   <option value="접대비">접대비</option>';
 		contents +=	'   </select></td> ';
 		contents += '  </tr>';
 		contents += '   <tr>';
@@ -44,8 +45,11 @@
 		contents +=	'    	<td><input name="imageFile" type="file"></td>';
 		contents +=	'  </tr>';
 		contents +=	'  </table>'; 
-		contents +=	'<a href="list">닫기</a>';
+		contents +=	'    	<input name="processStatus" type="hidden" value="접수">';
+		contents +=	'<a href="../expense/detail?no=0">닫기</a>';
 			contents +=	'<button>저장</button>';
 		rowDiv.innerHTML = contents;	
 		addMultiple.parentNode.appendChild(rowDiv);
-	}};
+    }
+	};
+	

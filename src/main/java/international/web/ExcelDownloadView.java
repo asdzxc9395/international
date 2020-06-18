@@ -61,14 +61,13 @@ public class ExcelDownloadView  extends AbstractView{
         
        OutputStream os = null;
        SXSSFWorkbook workbook = null;
-       System.out.println(fileName);
        try {
            workbook = (SXSSFWorkbook) model.get("workbook");
            os = response.getOutputStream();
            
            // 파일생성
            workbook.write(os);
-           System.out.println("마지막"+ workbook);
+
        }catch (Exception e) {
            e.printStackTrace();
        } finally {

@@ -7,7 +7,7 @@ create table expense(
    , use_price VARCHAR(30)                       -- 사용금액
    , approve_price VARCHAR(30)                  -- 승인금액
    , process_status VARCHAR(30)                  -- 처리상태
-   , registration_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP             -- 등록일
+   , registration_date DATE DEFAULT CURRENT_DATE          -- 등록일
    , receipt VARCHAR(255)                          -- 영수증
    , process_date DATETIME                 -- 처리일시
    , remark VARCHAR(100)                	          -- 비고

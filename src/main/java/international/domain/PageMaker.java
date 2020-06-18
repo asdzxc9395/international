@@ -27,11 +27,29 @@ public class PageMaker {
 				.queryParam("page", page)
 				.queryParam("perPageNum", this.cri.getPerPageNum());
 			//검색 한 경우		
+			if (this.cri.getNameType() != null) {
+				uriComponentsBuilder
+					.queryParam("nameType", this.cri.getNameType())
+					.queryParam("keyword", this.cri.getKeyword());
+			}
+			if (this.cri.getRegType() != null) {
+				uriComponentsBuilder
+					.queryParam("regType", this.cri.getRegType())
+					.queryParam("keyword", this.cri.getKeyword());
+			}
+			if (this.cri.getProType() != null) {
+				uriComponentsBuilder
+					.queryParam("proType", this.cri.getProType())
+					.queryParam("keyword", this.cri.getKeyword());
+			}
 			if (this.cri.getSearchType() != null) {
 				uriComponentsBuilder
 					.queryParam("searchType", this.cri.getSearchType())
 					.queryParam("keyword", this.cri.getKeyword());
 			}
+			
+			
+			
 			return uriComponentsBuilder.build().encode().toString();
 		}
 		

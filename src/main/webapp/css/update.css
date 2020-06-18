@@ -1,0 +1,17 @@
+@charset "UTF-8";
+
+
+#update {
+margin-left: 400px;
+position:relative;
+}
+
+#add {
+float: left;
+display:inline-block;
+height: 1000px;
+ 	}
+
+#list {
+text-align: center;
+}

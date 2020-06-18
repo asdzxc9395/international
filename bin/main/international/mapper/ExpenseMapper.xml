@@ -35,11 +35,11 @@ select * from expense;
 		insert into expense
 		(
 		name, use_date, use_price, approve_price,
-		 process_status, registration_date, receipt, 
+		 process_status, receipt, 
 		 process_date, remark)
 		values(
 		#{name}, #{useDate}, #{usePrice}, #{approvePrice}, #{processStatus}, 
-		#{registrationDate}, #{receipt}, #{processDate}, #{remark})
+		#{receipt}, #{processDate}, #{remark})
 		    <selectKey keyProperty="expenseNo" resultType="int">
         SELECT LAST_INSERT_ID()
     </selectKey>
@@ -68,4 +68,43 @@ select * from expense;
 		where
 		expense_no = #{expenseNo}
 	</update>
+	
+	  <select id="findByKeyword" resultMap="ExpenseMap" parameterType="map">
+    select * 
+    from expense
+    <where>
+      <if test="name != null">name like concat('%', #{name}, '%')</if>
+      <if test="processStatus != null">and process_status like concat('%', #{processStatus}, '%')</if>
+      <if test="registrationDate != null">and registration_date &lt;= #{registrationDate}</if>
+    </where>
+  </select>
+	
+	<select id="listPage" resultMap="ExpenseMap">
+		select *
+		from expense
+		where expense_no >= 0
+		<include refid="searchCondition"></include>
+		order by expense_no desc limit #{pageStart}, #{perPageNum}
+	</select>
+
+	<select id="getTotalCount" resultType="int">
+		select count(*)
+		from expense
+		where expense_no >= 0
+		<include refid="searchCondition"></include>
+	</select>
+	
+	  
+  
+  <sql id="searchCondition">
+		<if test="searchType != null">
+      <if test="name != null and nameType == 'n'.toString()">
+      and name like concat('%', #{name}, '%')</if>
+      <if test="registrationDate != null regType == 'r'.toString()">
+      and registrationDate >= #{registrationDate}</if>
+      <if test="processStatus != null proType == 'p'.toString()">
+      and process_status like concat('%', #{processStatus}, '%')</if>
+		</if>
+	</sql>
+
 </mapper>

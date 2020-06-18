@@ -1,11 +1,15 @@
 package international.web;
 
 import java.io.File;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
 
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.google.gson.GsonBuilder;
-
+import international.domain.Criteria;
 import international.domain.Expense;
 import international.service.ExpenseService;
 
@@ -35,35 +38,82 @@ public class ExpenseController {
 	public String form() throws Exception {
 		return "/WEB-INF/jsp/expense/form.jsp";
 	}
-	
+
 	@GetMapping("list")
-	public String list(Model model) throws Exception {
-		List<Expense> list = expenseService.list();
-		model.addAttribute("list", list);
+	public String list(Criteria cri, Model model) throws Exception{
+		List<Expense> size = expenseService.list();
+		List<Expense> expense = expenseService.listPage(cri);
+		model.addAttribute("list",expense);
+		
+		int usePrice = 0;
+		int approvePrice = 0;
+		int b = 0;
+		for(int i = 0; i < expense.size(); i++) {
+			if(expense.get(i).getUsePrice() == null) {
+			b = 0;	
+			} else {
+			b = Integer.parseInt(expense.get(i).getUsePrice());
+			}
+			usePrice+=b;
+		}
+		for(int i = 0; i < expense.size(); i++) {
+			if(expense.get(i).getApprovePrice() == null) {
+				b = 0;	
+			} else {
+				b = Integer.parseInt(expense.get(i).getApprovePrice());
+			}
+			approvePrice+=b;
+		}
+		
+		model.addAttribute("size", size.size());
+		model.addAttribute("approvePrice", approvePrice);
+		model.addAttribute("usePrice", usePrice);
+		
 		return "/WEB-INF/jsp/expense/list.jsp";
 	}
+
 	@GetMapping("detail")
-	public String detail(int no, Model model) throws Exception {
+	public String detail(Criteria cri,int no, Model model) throws Exception {
+		List<Expense> size = expenseService.list();
+		List<Expense> expense = expenseService.listPage(cri);
+		model.addAttribute("list",expense);
 		
+		int usePrice = 0;
+		int approvePrice = 0;
+		int b = 0;
+		for(int i = 0; i < expense.size(); i++) {
+			if(expense.get(i).getUsePrice() == null) {
+			b = 0;	
+			} else {
+			b = Integer.parseInt(expense.get(i).getUsePrice());
+			}
+			usePrice+=b;
+		}
+		for(int i = 0; i < expense.size(); i++) {
+			if(expense.get(i).getApprovePrice() == null) {
+				b = 0;	
+			} else {
+				b = Integer.parseInt(expense.get(i).getApprovePrice());
+			}
+			approvePrice+=b;
+		}
+		
+		model.addAttribute("size", size.size());
+		model.addAttribute("approvePrice", approvePrice);
+		model.addAttribute("usePrice", usePrice);
+		model.addAttribute("list",expense);
 		model.addAttribute("expense", expenseService.get(no));
 		return "/WEB-INF/jsp/expense/detail.jsp";
 	}
-	@GetMapping(value="data", produces = "application/json;charset=UTF-8")
-	public String data(int no, Model model) throws Exception {
-		
-		Expense expense = expenseService.get(no);
-		
-		return new GsonBuilder().create().toJson(expense);	
-		}
 
 	@GetMapping("delete")
-		public String delete(int no, Model model) throws Exception{
-	    if (expenseService.delete(no) > 0) { // 삭제했다면,
-	        return "redirect:list";
-	      } else {
-	        throw new Exception("삭제할 회원 번호가 유효하지 않습니다.");
-	      }
+	public String delete(int no, Model model) throws Exception{
+		if (expenseService.delete(no) > 0) { // 삭제했다면,
+			return "redirect:list";
+		} else {
+			throw new Exception("삭제할 회원 번호가 유효하지 않습니다.");
 		}
+	}
 
 	@RequestMapping(value = "/add", method = RequestMethod.POST)
 	public String add(Expense expense, MultipartFile imageFile) throws Exception {
@@ -76,9 +126,9 @@ public class ExpenseController {
 		expenseService.add(expense);
 		System.out.println(expense);
 
-		return "redirect:../expense/list";
+		return "redirect:../expense/detail?no=0";
 	}
-	
+
 	@PostMapping("update")
 	public String update(Expense expense, MultipartFile imageFile) throws Exception {
 		if (imageFile.getSize() > 0) {
@@ -95,57 +145,44 @@ public class ExpenseController {
 			throw new Exception("변경할 게시물 번호가 유효하지 않습니다.");
 		}
 	}
-//	@GetMapping("list")
-//	public String list(Criteria cri, Model model) throws Exception{
-//		List<Expense> expense = expenseService.listPage(cri);
-//		model.addAttribute("list",expense);
-//		PageMaker pageMaker = new PageMaker(cri);
-//		int totalCount = expenseService.getTotalCount(cri);
-//		pageMaker.setTotalCount(totalCount);
-//		model.addAttribute("pageMaker", pageMaker);
-//
-//		return "/WEB-INF/jsp/expense/list.jsp";
-//	}
 
-//	@GetMapping("detail")
-//	public String updateForm(int no, Model model) throws Exception {
-//		model.addAttribute("expense", expenseService.get(no));
-//		return "/WEB-INF/jsp/expense/detail.jsp";
-//	}
-//
+	@GetMapping("search")
+	public String search(Expense expense, Model model, Criteria cri) throws Exception {
+		HashMap<String, Object> map = new HashMap<>();
 
-//	@RequestMapping(value = "/downloadExcelFile", method =  RequestMethod.POST)
-//	public String downloadExcelFile(Expense expense, Model model, HttpServletRequest req) throws Exception {
-//		HttpSession session = req.getSession();
-//		List<Expense> list = (List<Expense>) session.getAttribute("userNo");
-//		System.out.println(list);
-//		
-//		SXSSFWorkbook workbook = expenseService.excelFileDownloadProcess(list);
-//		model.addAttribute("locale", Locale.KOREA);
-//		model.addAttribute("workbook", workbook);
-//		model.addAttribute("workbookName", "기본정보");
-//		return "excelDownloadView";
-//	}
-//	@RequestMapping(value = "/moveData", method =  RequestMethod.POST)
-//	@ResponseBody
-//	public String moveData(Expense expense, Model model, 
-//			@RequestParam(value = "chBox[]") List<String> chArr	
-//			, HttpServletRequest req) throws Exception {
-//		List<Expense> list = new ArrayList<Expense>();
-//		int userNum = 0;
-//		for(String i : chArr) {  
-//			userNum = Integer.parseInt(i);
-//			expense = expenseService.get(userNum);
-//			list.add(expense);
-//		}  
-//		System.out.println(list);
-//		
-//		HttpSession session = req.getSession();
-//		session.setAttribute("userNo", list);
-//		System.out.println(list);
-//		return "1";
-//	}
+		List<Expense> pageList = expenseService.listPage(cri);
+		pageList.removeAll(pageList);
+		if (expense.getName().length() > 0) {
+			map.put("name", expense.getName());
+		}
 
+		if (expense.getRegistrationDate() != null) {
+			map.put("registrationDate", expense.getRegistrationDate().toString());
+		}
+
+		if (expense.getProcessStatus().length() > 0) {
+			map.put("processStatus", expense.getProcessStatus());
+		}
+		List<Expense> list = expenseService.search(map);
+		Collections.reverse(list);
+		for(int i = list.size(); i >= 1; i--) {
+			System.out.println(list.get(i-1));
+		}
+		list = expenseService.listPage(cri);
+		
+		model.addAttribute("list", list);
+		return "/WEB-INF/jsp/expense/search.jsp";
+	}
+	
+	@RequestMapping(value = "/downloadExcelFile", method =  RequestMethod.POST)
+	public String downloadExcelFile(Expense expense, Model model, Criteria cri) throws Exception {
+		List<Expense> list = expenseService.listPage(cri);
+		SXSSFWorkbook workbook = expenseService.excelFileDownloadProcess(list);
+		model.addAttribute("locale", Locale.KOREA);
+		model.addAttribute("workbook", workbook);
+		model.addAttribute("workbookName", "기본정보");
+		return "excelDownloadView";
+	}
 }
 
 

@@ -17,10 +17,10 @@ public interface ExpenseDao {
 	
 	public Expense findByNo(int no) throws Exception;
 	
-//	List<Expense> findByKeyword(Map<String, Object> params) throws Exception;
+	List<Expense> findByKeyword(Map<String, Object> params) throws Exception;
 //
-//	List<Expense> listPage(Criteria cri) throws Exception;
-//	
-//	public int getTotalCount(Criteria cri) throws Exception;
+	List<Expense> listPage(Criteria cri) throws Exception;
+	
+	public int getTotalCount(Criteria cri) throws Exception;
 	
 }

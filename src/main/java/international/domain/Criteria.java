@@ -6,6 +6,9 @@ public class Criteria {
 	private int page;
 	private int perPageNum;
 	private String searchType;
+	private String nameType;
+	private String regType;
+	private String proType;
 	private String keyword;
 	
 	public Criteria() {
@@ -24,6 +27,21 @@ public class Criteria {
 			uriComponentsBuilder
 					.queryParam("searchType", this.searchType)
 					.queryParam("keyword", this.keyword);
+		}
+		if (nameType != null) {
+			uriComponentsBuilder
+				.queryParam("nameType", this.getNameType())
+				.queryParam("keyword", this.getKeyword());
+		}
+		if (regType != null) {
+			uriComponentsBuilder
+				.queryParam("regType", this.getRegType())
+				.queryParam("keyword", this.getKeyword());
+		}
+		if (proType != null) {
+			uriComponentsBuilder
+				.queryParam("proType", this.getProType())
+				.queryParam("keyword", this.getKeyword());
 		}
 		return uriComponentsBuilder.build().encode().toString();
 	}
@@ -70,10 +88,34 @@ public class Criteria {
 		this.keyword = keyword;
 	}
 
+	public String getNameType() {
+		return nameType;
+	}
+
+	public void setNameType(String nameType) {
+		this.nameType = nameType;
+	}
+
+	public String getRegType() {
+		return regType;
+	}
+
+	public void setRegType(String regType) {
+		this.regType = regType;
+	}
+
+	public String getProType() {
+		return proType;
+	}
+
+	public void setProType(String proType) {
+		this.proType = proType;
+	}
+
 	@Override
 	public String toString() {
-		return "Criteria [page=" + page + ", perPageNum=" + perPageNum + ", searchType=" + searchType + ", keyword="
-				+ keyword + "]";
+		return "Criteria [page=" + page + ", perPageNum=" + perPageNum + ", searchType=" + searchType + ", nameType="
+				+ nameType + ", regType=" + regType + ", proType=" + proType + ", keyword=" + keyword + "]";
 	}
 	
 
