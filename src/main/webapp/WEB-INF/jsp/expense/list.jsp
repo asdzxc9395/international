@@ -71,30 +71,9 @@
        <th width="16%"></th>
   </tr>
 </table>
-</div>
-<div id="add">
-<form action='add' method='post' enctype='multipart/form-data'>
-<a id="addForm">등록</a>
-</form> 
-</div>
-
+</div> 
 <!-- 엑셀 다운로드 -->
 <script type="text/javascript">
-    function doExcelUploadProcess(){
-        var f = new FormData(document.getElementById('form1'));
-        $.ajax({
-            url: "uploadExcelFile",
-            data: f,
-            processData: false,
-            contentType: false,
-            type: "POST",
-            success: function(data){
-                console.log(data);
-                document.getElementById('result').innerHTML = JSON.stringify(data);
-            }
-        })
-    }
-    
     function doExcelDownloadProcess(){
         var f = document.form1;
         f.action = "downloadExcelFile";
@@ -102,11 +81,14 @@
     }
 </script>
 <form id="form1" name="form1" method="post" enctype="multipart/form-data">
-    <input type="file" id="fileInput" name="fileInput">
     <button type="button" onclick="doExcelDownloadProcess()">엑셀다운로드</button>
-    <button type="button" onclick="doExcelUploadProcess()">등록</button>
 </form>
-
+<div id="add">
+<form action='add' method='post' enctype='multipart/form-data'>
+<a id="addForm">등록</a>
+</form> 
+</div>
+<!-- 엑셀 다운로드 끝 -->
 
 <script src="../../script/addEvent.js"></script>
 </body>

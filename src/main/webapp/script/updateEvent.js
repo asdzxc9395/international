@@ -12,9 +12,9 @@ function update() {
 	var addMultiple = document.getElementById("updateForm");
 		if(doubleSubmitCheck()) return;
 		let rowDiv = document.createElement("div");
-
 		
-		console.log(1);
+		
+		
 		let contents = '';
 
 		contents +='<h2>경비 등록/ 수정</h2>';
@@ -34,7 +34,7 @@ function update() {
 		contents +='</tr>';
 		contents +='<tr>';
 		contents +='<td>사용일</td>';
-		contents +='<td><input name="useDate" type="date" value="${expense.useDate}"></td>';
+		contents +='<td><input name="useDate" type="date" value="${useDate}"></td>';
 		contents +='</tr>';
 		contents +='<tr>';
 		contents +='<td>금액</td>';

@@ -109,7 +109,7 @@ public class ExpenseServiceImpl implements ExpenseService{
             bodyCell.setCellValue(i + 1);
             // 데이터 이름 표시
             bodyCell = bodyRow.createCell(1);
-            bodyCell.setCellValue(expense.getUseDate());
+            bodyCell.setCellValue(expense.getUseDate().toString());
             // 데이터 가격 표시
             bodyCell = bodyRow.createCell(2);
             bodyCell.setCellValue(expense.getName());
@@ -121,9 +121,8 @@ public class ExpenseServiceImpl implements ExpenseService{
             bodyCell = bodyRow.createCell(5);
             bodyCell.setCellValue(expense.getProcessStatus());
             bodyCell = bodyRow.createCell(6);
-            bodyCell.setCellValue(expense.getRegistrationDate());
+            bodyCell.setCellValue(expense.getRegistrationDate().toString());
         }
-        
         return workbook;
 	}
 	

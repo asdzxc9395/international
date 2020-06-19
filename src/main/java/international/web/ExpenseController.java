@@ -8,6 +8,8 @@ import java.util.Locale;
 import java.util.UUID;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,15 +46,15 @@ public class ExpenseController {
 		List<Expense> size = expenseService.list();
 		List<Expense> expense = expenseService.listPage(cri);
 		model.addAttribute("list",expense);
-		
+
 		int usePrice = 0;
 		int approvePrice = 0;
 		int b = 0;
 		for(int i = 0; i < expense.size(); i++) {
 			if(expense.get(i).getUsePrice() == null) {
-			b = 0;	
+				b = 0;	
 			} else {
-			b = Integer.parseInt(expense.get(i).getUsePrice());
+				b = Integer.parseInt(expense.get(i).getUsePrice());
 			}
 			usePrice+=b;
 		}
@@ -64,11 +66,11 @@ public class ExpenseController {
 			}
 			approvePrice+=b;
 		}
-		
+
 		model.addAttribute("size", size.size());
 		model.addAttribute("approvePrice", approvePrice);
 		model.addAttribute("usePrice", usePrice);
-		
+
 		return "/WEB-INF/jsp/expense/list.jsp";
 	}
 
@@ -77,15 +79,15 @@ public class ExpenseController {
 		List<Expense> size = expenseService.list();
 		List<Expense> expense = expenseService.listPage(cri);
 		model.addAttribute("list",expense);
-		
+
 		int usePrice = 0;
 		int approvePrice = 0;
 		int b = 0;
 		for(int i = 0; i < expense.size(); i++) {
 			if(expense.get(i).getUsePrice() == null) {
-			b = 0;	
+				b = 0;	
 			} else {
-			b = Integer.parseInt(expense.get(i).getUsePrice());
+				b = Integer.parseInt(expense.get(i).getUsePrice());
 			}
 			usePrice+=b;
 		}
@@ -97,7 +99,7 @@ public class ExpenseController {
 			}
 			approvePrice+=b;
 		}
-		
+
 		model.addAttribute("size", size.size());
 		model.addAttribute("approvePrice", approvePrice);
 		model.addAttribute("usePrice", usePrice);
@@ -140,18 +142,17 @@ public class ExpenseController {
 			expense.setReceipt(filename);
 		}
 		if (expenseService.update(expense) > 0) {
-			return "redirect:list";
+			return "redirect:../expense/detail?no=0";
 		} else {
 			throw new Exception("변경할 게시물 번호가 유효하지 않습니다.");
 		}
 	}
 
 	@GetMapping("search")
-	public String search(Expense expense, Model model, Criteria cri) throws Exception {
+	public String search(Expense expense, Model model, Criteria cri
+			, HttpServletRequest req) throws Exception {
 		HashMap<String, Object> map = new HashMap<>();
 
-		List<Expense> pageList = expenseService.listPage(cri);
-		pageList.removeAll(pageList);
 		if (expense.getName().length() > 0) {
 			map.put("name", expense.getName());
 		}
@@ -163,20 +164,40 @@ public class ExpenseController {
 		if (expense.getProcessStatus().length() > 0) {
 			map.put("processStatus", expense.getProcessStatus());
 		}
+
 		List<Expense> list = expenseService.search(map);
-		Collections.reverse(list);
-		for(int i = list.size(); i >= 1; i--) {
-			System.out.println(list.get(i-1));
+		for(int i = 0; i < list.size(); i++) {
+			if(list.size() > 5) {
+				System.out.println(list.get(i));
+				list.remove(i);
+			}
 		}
-		list = expenseService.listPage(cri);
+		Collections.reverse(list);
 		
+		//세션 저장
+		HttpSession session = req.getSession();
+		session.setAttribute("userNo", list);
+
+		model.addAttribute("size", list.size());
 		model.addAttribute("list", list);
 		return "/WEB-INF/jsp/expense/search.jsp";
 	}
-	
+
 	@RequestMapping(value = "/downloadExcelFile", method =  RequestMethod.POST)
 	public String downloadExcelFile(Expense expense, Model model, Criteria cri) throws Exception {
 		List<Expense> list = expenseService.listPage(cri);
+		SXSSFWorkbook workbook = expenseService.excelFileDownloadProcess(list);
+		model.addAttribute("locale", Locale.KOREA);
+		model.addAttribute("workbook", workbook);
+		model.addAttribute("workbookName", "기본정보");
+		return "excelDownloadView";
+	}
+	// search검색시 나오는 정보를 다운받을 exceldownloads
+	@RequestMapping(value = "/downloadExcelFile2", method =  RequestMethod.POST)
+	public String downloadExcelFile2(Expense expense, Model model, Criteria cri
+			, HttpServletRequest req) throws Exception {
+		HttpSession session = req.getSession();
+		List<Expense> list = (List<Expense>) session.getAttribute("userNo");
 		SXSSFWorkbook workbook = expenseService.excelFileDownloadProcess(list);
 		model.addAttribute("locale", Locale.KOREA);
 		model.addAttribute("workbook", workbook);

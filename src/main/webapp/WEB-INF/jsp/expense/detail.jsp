@@ -34,11 +34,16 @@
     			<option value="반려">반려</option>
 			</select>
 			<button>검색</button>
-			<a href="list">초기화</a>
+			<a href="../expense/detail?no=0">초기화</a>
 			</form>
 
 <div id="list">
  <h2 class="bList_title"> 총${size}건</h2>
+ 
+ <form id="form1" name="form1" method="post" enctype="multipart/form-data">
+    <button type="button" onclick="doExcelDownloadProcess()">엑셀다운로드</button>
+</form>
+
 <table border="8">
     <tr>
        <th width="5%" height="15%">순번</th>
@@ -77,7 +82,6 @@
 <a id="addForm">등록</a>
 </form> 
 </div>
-
 
 <!-- 업데이트 -->
 <div id='update'>
@@ -144,9 +148,16 @@
 <img src='${pageContext.servletContext.contextPath}/upload/expense/${expense.receipt}' height='150'><br>
 <button>저장</button>
 <a href="delete?no=${expense.expenseNo}">삭제</a>
-<a href="list">닫기</a>
+<a href="../expense/detail?no=0">닫기</a>
 </form>
 </div>
+<script type="text/javascript">
+    function doExcelDownloadProcess(){
+        var f = document.form1;
+        f.action = "downloadExcelFile";
+        f.submit();
+    }
+</script>
 <script src="../../script/addEvent.js"></script>
 </body>
 </html>

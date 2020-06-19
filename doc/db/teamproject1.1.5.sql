@@ -3,7 +3,7 @@ drop table expense;
 create table expense( 
    expense_no INTEGER 	 NOT NULL        -- 순번
    , name VARCHAR(50) 	    	         -- 사용내역
-   , use_date DATETIME                             -- 사용일
+   , use_date DATE                             -- 사용일
    , use_price VARCHAR(30)                       -- 사용금액
    , approve_price VARCHAR(30)                  -- 승인금액
    , process_status VARCHAR(30)                  -- 처리상태

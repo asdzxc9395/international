@@ -1,23 +1,22 @@
-	var doubleSubmitFlag = false;
-    function doubleSubmitCheck(){
-        if(doubleSubmitFlag){
-            return doubleSubmitFlag;
-        }else{
-            doubleSubmitFlag = true;
-            return false;
-        }
-    }
-/*    	function add() {
-    	var addMultiple = document.getElementById("addForm");
-    		if(doubleSubmitCheck()) return;*/
-	window.onload = function() {
-		var addMultiple = document.getElementById("addForm");
-		addMultiple.onclick = function() {
-			if(doubleSubmitCheck()) return;
+var doubleSubmitFlag = false;
+function doubleSubmitCheck(){
+	if(doubleSubmitFlag){
+		return doubleSubmitFlag;
+	}else{
+		doubleSubmitFlag = true;
+		return false;
+	}
+}
+window.onload = function() {
+	var addMultiple = document.getElementById("addForm");
+addMultiple.onclick = function() {
+	
+    	if(doubleSubmitCheck()) return;
+    		
 		let rowDiv = document.createElement("div");
 		
 		let contents = '';
-	
+
 		contents +='<h2>경비 등록/ 수정</h2>';
 		contents +='<table border="8">';
 		contents += ' <tr>';
@@ -47,9 +46,9 @@
 		contents +=	'  </table>'; 
 		contents +=	'    	<input name="processStatus" type="hidden" value="접수">';
 		contents +=	'<a href="../expense/detail?no=0">닫기</a>';
-			contents +=	'<button>저장</button>';
+		contents +=	'<button>저장</button>';
+		
 		rowDiv.innerHTML = contents;	
 		addMultiple.parentNode.appendChild(rowDiv);
-    }
-	};
-	
+		
+}};
